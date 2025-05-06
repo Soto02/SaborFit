@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-fab-button id="btnUsuario">
+    <ion-icon name="person"></ion-icon>
+  </ion-fab-button>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-fab-button id="btnPerfil" [routerLink]="['/perfil']">
+      <ion-icon name="person"></ion-icon>
+    </ion-fab-button>
+  </ion-header>
+
+  <div class="buscar-wrapper">
+    <ion-searchbar id="buscar" placeholder="Buscar..."></ion-searchbar>
+  </div>
+
+  <ion-button id="btnGenerar"> Generar menu semanal</ion-button>
+
+  <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content>
+      <ion-card
+        *ngFor="let recipe of recipes; trackBy: trackById"
+        [routerLink]="['/recipe, recipe.getId()']"
+      >
+        <ion-thumbnail slot="start">
+          <img [alt]="recipe.getName()" [src]="recipe.getImages()[0]" />
+        </ion-thumbnail>
+        <ion-card-header>
+          <ion-card-title>{{recipe.getName()}}</ion-card-title>
+          <ion-card-subtitle
+            >{{recipe.getDescription() || 'Sin descripcion'
+            }}</ion-card-subtitle
+          >
+        </ion-card-header>
+
+        <ion-card-content>
+          {{ recipe.getIngredients() || 'Ingredientes no disponibles' }}
+        </ion-card-content>
+      </ion-card>
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <ion-fab-button id="btnFiltros" [routerLink]="['/filter']">
+    <ion-icon name="list"></ion-icon>
+  </ion-fab-button>
+</ion-content>
