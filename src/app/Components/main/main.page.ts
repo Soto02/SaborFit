@@ -9,11 +9,14 @@ import {
   IonRouterLink,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { list, person } from 'ionicons/icons';
+import { list, person, searchOutline } from 'ionicons/icons';
 import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { RouterLink } from '@angular/router';
 import { Recipe } from 'src/app/Models/Recipe/recipe';
 import { RecipeService } from 'src/app/Services/recipe-service.service';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 @Component({
   selector: 'app-main',
@@ -32,10 +35,13 @@ import { RecipeService } from 'src/app/Services/recipe-service.service';
 })
 export class MainPage implements OnInit {
   recipes: Recipe[] = [];
+  filteredRecipes: Recipe[] = [];
+  searchQuery: string = '';
 
   constructor(private recipeService: RecipeService) {
     addIcons({ person });
     addIcons({ list });
+    addIcons({ searchOutline });
   }
 
   ngOnInit() {
@@ -59,20 +65,28 @@ export class MainPage implements OnInit {
   }
 
   onIonInfinite(ev: InfiniteScrollCustomEvent) {
-    this.loadRecipes();
-    this.recipeService.getAll().subscribe({
-      next: (recipe: Recipe[]) => {
-        this.recipes.push(...recipe);
-        ev.target.complete();
-      },
-      error: (err) => {
-        console.error('Error al cargar más recetas:', err);
-        ev.target.complete();
-      },
-    });
+    //this.loadRecipes();
+    // this.recipeService.getAll().subscribe({
+    //   next: (recipe: Recipe[]) => {
+    //     this.recipes.push(...recipe);
+    //     ev.target.complete();
+    //   },
+    //   error: (err) => {
+    //     console.error('Error al cargar más recetas:', err);
+    //     ev.target.complete();
+    //   },
+    // });
 
     setTimeout(() => {
       (ev as InfiniteScrollCustomEvent).target.complete();
     }, 500);
   }
+
+  onSearch() {
+    const terms = this.searchQuery.split(',').map(i => i.trim().toLowerCase());
+  this.filteredRecipes = this.recipes.filter(recipe =>
+    terms.some(term => recipe.getName().toLowerCase().includes(term))
+  );
+  }
+
 }

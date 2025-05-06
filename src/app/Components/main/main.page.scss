@@ -1,11 +1,29 @@
 ion-content {
   font-family: var(--font-modern);
+  --background: var(--healthy-light-bg);
+}
+ion-title {
+  text-align: center;
+  font-family: var(--font-modern);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--healthy-green);
+  margin-right: 35px;
+}
+.header-toolbar {
+  --background: var(--healthy-header-bg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.header-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 // Botón de usuario (fab superior)
 #btnUsuario {
   --background: var(--healthy-green);
-  margin: 16px 16px 32px 16px;
+  margin: 16px 0px 20px 16px;
 }
 
 // Buscador
@@ -21,6 +39,31 @@ ion-content {
   --padding-end: 16px;
 }
 
+//SearchBar
+.custom-searchbar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin: 16px;
+  padding: 4px 8px;
+}
+
+.custom-input {
+  flex: 1;
+  font-size: 1.2rem;
+  font-family: var(--font-modern);
+  border: none;
+}
+
+.search-icon {
+  font-size: 1.5rem;
+  color: var(--healthy-green);
+  padding: 6px;
+  cursor: pointer;
+}
+
 // Botón generar menú
 #btnGenerar {
   --background: var(--healthy-green);
@@ -34,6 +77,7 @@ ion-content {
 ion-card {
   margin: 16px;
   font-family: var(--font-modern);
+  border-radius: 5px;
 }
 
 // Botón de filtros (siempre fijo abajo a la derecha)
@@ -43,4 +87,45 @@ ion-card {
   right: 20px;
   --background: var(--healthy-green);
   z-index: 999;
+}
+.recipe-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+//------------------------ESTILO SLIDE---------------------
+.swiper-preview {
+  margin: 0 16px 16px;
+  padding-top: 8px;
+  height: 220px;
+}
+
+.slide-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  height: 100%;
+  max-height: 180px;
+  padding: 4px;
+}
+
+.slide-img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.slide-title {
+  font-family: var(--font-modern);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 4px;
 }

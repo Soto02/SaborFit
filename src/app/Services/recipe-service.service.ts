@@ -28,7 +28,9 @@ export class RecipeService {
                 '',
                 '',
                 '',
-                [recipe.image],
+                // [recipe.image],
+                [],
+                recipe.image,
                 false
               )
           )

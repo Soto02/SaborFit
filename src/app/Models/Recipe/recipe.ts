@@ -6,6 +6,7 @@ export class Recipe {
   private description: string = '';
   private materials: string = '';
   private images: string[] = [];
+  private thumbnail: string = '';
   private favorite: boolean = false;
 
   //CONSTRUCTOR
@@ -16,6 +17,7 @@ export class Recipe {
     description: string,
     materials: string,
     images: string[],
+    thumbnail: string,
     favorite: boolean
   ) {
     this.id = id;
@@ -24,6 +26,7 @@ export class Recipe {
     this.description = description;
     this.materials = materials;
     this.images = images;
+    this.thumbnail = thumbnail;
     this.favorite = favorite;
   }
 
@@ -45,6 +48,9 @@ export class Recipe {
   }
   public getImages(): string[] {
     return this.images;
+  }
+  public getThumbnail(): string {
+    return this.thumbnail;
   }
   public getFavorite(): boolean {
     return this.favorite;
@@ -68,6 +74,9 @@ export class Recipe {
   }
   public setImages(images: string[]) {
     this.images = images;
+  }
+  public setThumbnail(thumbnail: string) {
+    this.thumbnail = thumbnail;
   }
   public setFavorite(favorite: boolean) {
     this.favorite = true;
