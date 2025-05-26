@@ -1,0 +1,36 @@
+.input-item {
+  --background: #ffffff;
+  --border-radius: 16px;
+  --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --padding-start: 12px;
+  margin: 0;
+  padding: 0 0px 12px 0;
+  width: 100%;
+  font-family: var(--font-modern);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  font-size: 24px;
+  color: #444;
+}
+
+.input-field {
+  font-size: 20px;
+  font-family: var(--font-modern);
+  justify-content: start;
+  width: 100%;
+  --padding-top: 2px;
+  --padding-bottom: 12px;
+  --padding-start: 8px;
+  --padding-end: 0px;
+}
+  
+.eye-button {
+  margin-top: 20px;
+  margin-right: 0;
+  color: #444;
+  font-size: 24px;
+}
