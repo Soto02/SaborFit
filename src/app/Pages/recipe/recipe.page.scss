@@ -1,0 +1,32 @@
+ion-content {
+  font-family: var(--font-modern);
+  color: var(--grey-text);
+  --background: var(--beige);
+}
+.recipe-title {
+  text-align: center;
+  font-family: var(--font-modern);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--grey-text);
+  margin: 0 10px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+  flex: 1;
+}
+.header-toolbar {
+  --background: var(--orange-app);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.header-bar {
+  display: flex;
+  align-items: center;
+   padding: 8px 12px;
+}
+// Botón de volver (fab superior)
+#btnUsuario {
+  --background: var(--green-leaf);
+  margin: 16px 0px 20px 5px;
+}

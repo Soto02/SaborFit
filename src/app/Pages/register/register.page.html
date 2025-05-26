@@ -1,0 +1,33 @@
+<Header title="SABOR FIT"></Header>
+
+<ion-content>
+  <div class="div-flex-center">
+
+    <ion-icon  slot="start" class="input-icon"></ion-icon>
+
+    <form [formGroup]="form" class="auth-form">
+      <Input-ion
+        icon="person"
+        [control]="form.controls.name"
+        type="name"
+        label="Nombre"
+      ></Input-ion> 
+      <Input-ion
+        icon="mailOutline"
+        autocomplete="email"
+        [control]="form.controls.email"
+        type="email"
+        label="Correo"
+      ></Input-ion>
+
+      <Input-ion
+        icon="lockClosedOutline"
+        [control]="form.controls.password"
+        type="password"
+        label="Contraseña"
+      ></Input-ion>
+
+      <ion-button (click)="register()" expand="block" type="submit">Registrarse</ion-button>
+    </form>
+  </div>
+</ion-content>

@@ -1,17 +1,18 @@
 ion-content {
   font-family: var(--font-modern);
-  --background: var(--healthy-light-bg);
+  color: var(--grey-text);
+  --background: var(--beige);
 }
 ion-title {
   text-align: center;
   font-family: var(--font-modern);
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--healthy-green);
+  color: var(--white);
   margin-right: 35px;
 }
 .header-toolbar {
-  --background: var(--healthy-header-bg);
+  --background: var(--orange-app);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 .header-bar {
@@ -22,7 +23,7 @@ ion-title {
 
 // Botón de usuario (fab superior)
 #btnUsuario {
-  --background: var(--healthy-green);
+  --background: var(--green-leaf);
   margin: 16px 0px 20px 16px;
 }
 
@@ -59,7 +60,7 @@ ion-title {
 
 .search-icon {
   font-size: 1.5rem;
-  color: var(--healthy-green);
+  color: var(--green-lime);
   padding: 6px;
   cursor: pointer;
 }
@@ -85,9 +86,21 @@ ion-card {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  --background: var(--healthy-green);
+  --background: var(--green-leaf);
   z-index: 999;
 }
+.block {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ion-modal {
+  --height: 350px;
+}
+
 .recipe-img {
   width: 100%;
   height: auto;

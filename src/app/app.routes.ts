@@ -1,26 +1,37 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
-    path: 'main',
-    loadComponent: () => import('../app/Components/main/main.page').then( m => m.MainPage)
-  },
-  {
     path: '',
-    redirectTo: 'main',
+    redirectTo: 'login',
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    loadComponent: () =>
+      import('../app/Pages/login/login.page').then((m) => m.LoginPage),
+  },
+  {
+    path: 'main',
+    loadComponent: () =>
+      import('../app/Pages/main/main.page').then((m) => m.MainPage),
+    canActivate: [authGuard],
+  },
+  {
     path: 'perfil',
-    loadComponent: () => import('../app/Components/profile/perfil.page').then( m => m.PerfilPage)
+    loadComponent: () =>
+      import('../app/Pages/profile/perfil.page').then((m) => m.PerfilPage),
+    canActivate: [authGuard],
   },
   {
-    path: 'filter',
-    loadComponent: () => import('../app/Components/filter/filter.page').then( m => m.FilterPage)
+    path: 'recipe/:id',
+    loadComponent: () =>
+      import('../app/Pages/recipe/recipe.page').then((m) => m.RecipePage),
+    canActivate: [authGuard],
   },
   {
-    path: 'recipe',
-    loadComponent: () => import('../app/Components/recipe/recipe.page').then( m => m.RecipePage)
+    path: 'register',
+    loadComponent: () => import('./Pages/register/register.page').then( m => m.RegisterPage)
   },
-  
 ];

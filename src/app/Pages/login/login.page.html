@@ -1,0 +1,31 @@
+<Header title="SABOR FIT"></Header>
+
+<ion-content>
+  <div class="div-flex-center">
+    <img src="assets\logoBueno.png" alt="SaborFit logo" class="logo" />
+
+    <form [formGroup]="form" class="auth-form">
+      <Input-ion
+        icon="mailOutline"
+        autocomplete="email"
+        [control]="form.controls.email"
+        type="email"
+        label="Correo"
+      ></Input-ion>
+
+      <Input-ion
+        icon="lockClosedOutline"
+        [control]="form.controls.password"
+        type="password"
+        label="Contraseña"
+      ></Input-ion>
+
+      <ion-button (click)="goToLoggedPage()" expand="block" type="submit"
+        >Iniciar Sesion</ion-button
+      >
+      <ion-button (click)="goToRegister()" expand="block" type="submit">Registrarse</ion-button>
+    </form>
+
+    <div class="forgot-password">¿Olvidaste tu contraseña?</div>
+  </div>
+</ion-content>

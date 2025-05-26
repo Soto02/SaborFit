@@ -3,6 +3,7 @@ export class Recipe {
   private id: number = 0;
   private name: string = '';
   private ingredients: string = '';
+  private instructions: string = '';
   private description: string = '';
   private materials: string = '';
   private images: string[] = [];
@@ -18,7 +19,8 @@ export class Recipe {
     materials: string,
     images: string[],
     thumbnail: string,
-    favorite: boolean
+    favorite: boolean,
+    instructions: string
   ) {
     this.id = id;
     this.name = name;
@@ -28,6 +30,7 @@ export class Recipe {
     this.images = images;
     this.thumbnail = thumbnail;
     this.favorite = favorite;
+    this.instructions = instructions;
   }
 
   //METODOS GET
@@ -39,6 +42,9 @@ export class Recipe {
   }
   public getIngredients(): string {
     return this.ingredients;
+  }
+  public getInstructions(): string {
+    return this.instructions;
   }
   public getDescription(): string {
     return this.description;
@@ -65,6 +71,9 @@ export class Recipe {
   }
   public setIngredients(ingredients: string) {
     this.ingredients = ingredients;
+  }
+  public setInstructions(instructions: string) {
+    this.instructions = instructions;
   }
   public setDescription(description: string) {
     this.description = description;

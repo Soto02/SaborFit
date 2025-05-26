@@ -1,0 +1,114 @@
+<!-- <Header title="SABOR FIT"> -->
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <div class="header-bar">
+      <ion-fab-button id="btnUsuario">
+        <ion-icon name="person"></ion-icon>
+      </ion-fab-button>
+      <ion-popover trigger="btnUsuario" side="bottom" alignment="start">
+        <ng-template>
+          <ion-content class="ion-padding">
+            <div>
+              <ion-label>Bienvenido, FULANO</ion-label>
+            </div>
+            <div>
+              <ion-icon name="log-out-outline"></ion-icon>
+              <a>Cerrar Sesion</a>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-popover>
+      <ion-title>SABOR FIT</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+<!-- </Header> -->
+
+<ion-content [fullscreen]="false" #page>
+  <swiper-container
+    class="swiper-preview"
+    slides-per-view="2"
+    space-between="10"
+  >
+    <swiper-slide *ngFor="let recipe of recipes.slice(0,5); trackBy: trackById">
+      <ion-card class="slide-card">
+        <ion-card-header>
+          <img
+            [alt]="recipe.getName()"
+            [src]="recipe.getThumbnail()"
+            class="slide-img"
+          />
+          <ion-card-title class="slide-title"
+            >{{recipe.getName()}}</ion-card-title
+          >
+        </ion-card-header>
+      </ion-card>
+    </swiper-slide>
+  </swiper-container>
+
+  <div class="custom-searchbar">
+    <ion-input
+      [(ngModel)]="searchQuery"
+      placeholder="Buscar receta..."
+      class="custom-input"
+      (keyup.enter)="onSearch()"
+    ></ion-input>
+    <ion-icon
+      name="search-outline"
+      class="search-icon"
+      (click)="onSearch()"
+    ></ion-icon>
+  </div>
+
+  <ng-container *ngFor="let recipe of recipes; trackBy: trackById">
+    <ion-card [routerLink]="['/recipe', recipe.getId()]">
+      <img
+        [alt]="recipe.getName()"
+        [src]="recipe.getThumbnail()"
+        class="recipe-img"
+      />
+      <ion-card-header>
+        <ion-card-title>{{recipe.getName()}}</ion-card-title>
+        <ion-card-subtitle
+          >{{recipe.getDescription() || 'Sin descripcion' }}</ion-card-subtitle
+        >
+      </ion-card-header>
+
+      <ion-card-content>
+        {{ recipe.getIngredients() || 'Ingredientes no disponibles' }}
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+
+  <ion-infinite-scroll
+    (ionInfinite)="onloadRecipes($event)"
+    [disabled]="todasCargadas"
+  >
+    <ion-infinite-scroll-content
+      loadingText="Cargando recetas"
+      loadingSpinner="bubbles"
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <ion-fab-button id="btnFiltros" expand="block">
+    <ion-icon name="list"></ion-icon>
+  </ion-fab-button>
+  <ion-modal
+    trigger="btnFiltros"
+    [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]"
+    [canDismiss]="canDismiss"
+    [presentingElement]="page"
+    #modal
+  >
+    <ng-template>
+      <div class="block">Filtros</div>
+      <ion-buttons slot="end">
+        <ion-fab-button (click)="modal.dismiss()">Guardar</ion-fab-button>
+      </ion-buttons>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<!-- <ion-button id="btnGenerar"> Generar menu semanal</ion-button> -->
