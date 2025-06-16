@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <div class="header-bar">
+      <ion-fab-button id="btnAtras" (click)="back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-fab-button>
+      <ion-title class="ion-title">SABOR FIT</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="!loading && recipe">
+  <div class="imagen-container">
+    <ion-img
+      [src]="recipe.getThumbnail()"
+      alt="Imagen receta"
+      class="recipe-img"
+    ></ion-img>
+    <ion-icon
+      class="starCard"
+      [name]="recipe.getFavorite() ? 'star' : 'star-outline'"
+      (click)="recipeFavorita(recipe)"
+    >
+    </ion-icon>
+  </div>
+  <ion-card class="detalle-receta">
+    <ion-card-header>
+      <ion-card-title class="titulo">{{ recipe.getName() }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="line"></div>
+      <h3 class="subtitulo">👨‍🍳 Descripción</h3>
+      <p class="descripcion" [innerHTML]="recipe.getDescription()"></p>
+
+      <div class="line"></div>
+
+      <h3 class="subtitulo">🧂 Ingredientes</h3>
+      <ul class="ingredientes">
+        <li>{{ recipe.getIngredients() }}</li>
+      </ul>
+
+      <div class="line"></div>
+
+      <h3 class="subtitulo">👨‍🍳 Instrucciones</h3>
+      <ol class="instrucciones">
+        <li *ngFor="let paso of recipe.getInstructions()">{{ paso }}</li>
+      </ol>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

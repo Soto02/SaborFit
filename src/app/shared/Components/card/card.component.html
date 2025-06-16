@@ -1,0 +1,19 @@
+<ion-card (click)="onCardClick()">
+  <div class="image-container">
+    <ion-img
+      [alt]="recipe.getName()"
+      [src]="recipe.getThumbnail()"
+      class="recipe-img"
+    ></ion-img>
+    <ion-icon
+      class="starCard"
+      [name]="recipe.getFavorite() ? 'star' : 'star-outline'"
+      (click)="onToggleFavorite($event)"
+    >
+    </ion-icon>
+    
+  </div>
+  <ion-card-header>
+    <ion-card-title class="card-title">{{ recipe.getName() }}</ion-card-title>
+  </ion-card-header>
+</ion-card>

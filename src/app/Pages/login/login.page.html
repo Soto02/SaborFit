@@ -1,31 +1,43 @@
-<Header title="SABOR FIT"></Header>
-
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <div class="header-bar">
+      <ion-title class="ion-title">SABOR FIT</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
   <div class="div-flex-center">
-    <img src="assets\logoBueno.png" alt="SaborFit logo" class="logo" />
+    <img src="assets/login.png" alt="SaborFit logo" class="logo" />
 
     <form [formGroup]="form" class="auth-form">
-      <Input-ion
-        icon="mailOutline"
-        autocomplete="email"
-        [control]="form.controls.email"
-        type="email"
-        label="Correo"
-      ></Input-ion>
+      <div class="input-block">
+        <Input-ion
+          autocomplete="email"
+          [control]="form.controls.email"
+          type="email"
+          label="Correo"
+        ></Input-ion>
+        <div class="validators" *ngIf="form.controls.email.errors && form.controls.email.touched">
+          <div *ngIf="form.controls.email.errors?.['required']">El correo es obligatorio.</div>
+          <div *ngIf="form.controls.email.errors?.['email']">Introduzca un correo valido.</div>
+        </div>
+      </div>
 
-      <Input-ion
-        icon="lockClosedOutline"
-        [control]="form.controls.password"
-        type="password"
-        label="Contraseña"
-      ></Input-ion>
-
+      <div class="input-block">
+        <Input-ion
+          [control]="form.controls.password"
+          type="password"
+          label="Contraseña"
+        ></Input-ion>
+        <div class="validators" *ngIf="form.controls.password.errors && form.controls.password.touched">
+          <div *ngIf="form.controls.email.errors?.['required']">La contraseña es obligatoria.</div>
+        </div>
+      </div>
       <ion-button (click)="goToLoggedPage()" expand="block" type="submit"
         >Iniciar Sesion</ion-button
       >
       <ion-button (click)="goToRegister()" expand="block" type="submit">Registrarse</ion-button>
+      <!-- <div class="forgot-password">¿Olvidaste tu contraseña?</div> -->
     </form>
-
-    <div class="forgot-password">¿Olvidaste tu contraseña?</div>
   </div>
 </ion-content>

@@ -1,62 +1,85 @@
 ion-content {
-  --background: linear-gradient(to bottom, #f18b35, #f4a949);
-
-  .div-flex-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 20px 30px;
-  }
-
-  .logo {
-    width: 100px;
-    height: 100px;
-    margin: 20px auto 10px;
-    display: block;
-    object-fit: contain;
-  }
-
-  .title {
-    color: white;
-    font-size: 36px;
-    font-weight: 700;
-    margin: 20px 0;
-  }
-
-  .auth-form {
-    width: 100%;
-    max-width: 350px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-    min-height: 300px;
-
-    Input-ion {
-      background: white;
-      border-radius: 14px;
-      padding: 0;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    }
-  }
-
-  ion-button {
-    --background: #16813a;
-    --border-radius: 14px;
-    --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    height: 48px;
-  }
-
-  .forgot-password {
-    margin-top: 16px;
-    color: white;
-    font-size: 15px;
-    text-align: center;
-  }
+  font-family: var(--font-modern);
+  color: var(--grey-text);
+  --background: linear-gradient(to bottom, #ee8027, #eccfa8);
 }
+//HEADER
+.ion-title {
+  text-align: center;
+  font-family: var(--font-modern);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--white);
+  height: 90px;
+}
+.header-toolbar {
+  --background: var(--orange-app);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+.header-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+//CENTRAR CONTENIDO
+.div-flex-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 20px 30px 0px 30px;
+}
+.logo {
+  width: 250px;
+  height: 250px;
+  margin: 0 auto 24px;
+  display: block;
+  object-fit: contain;
+}
+.title {
+  color: white;
+  font-size: 36px;
+  font-weight: 700;
+  margin: 20px 0;
+}
+.validators {
+  color: #d32f2f;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 6px;
+  margin-left: 12px;
+  margin-bottom: 4px;
+  align-self: flex-start;
+  //line-height: 1.4;
+  font-family: var(--font-modern);
+}
+.auth-form {
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input-block {
+  display: flex;
+  flex-direction: column;
+}
+ion-button {
+  --background: var(--green-leaf);
+  --border-radius: 14px;
+  --box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  min-height: 48px;
+}
+.forgot-password {
+  margin-top: 16px;
+  color: white;
+  font-size: 15px;
+  text-align: center;
+}
+

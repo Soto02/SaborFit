@@ -2,11 +2,9 @@ export class Recipe {
   //VARIABLES
   private id: number = 0;
   private name: string = '';
-  private ingredients: string = '';
-  private instructions: string = '';
+  private ingredients: string[] = [''];
+  private instructions: string[] = [''];
   private description: string = '';
-  private materials: string = '';
-  private images: string[] = [];
   private thumbnail: string = '';
   private favorite: boolean = false;
 
@@ -14,20 +12,16 @@ export class Recipe {
   constructor(
     id: number,
     name: string,
-    ingredients: string,
+    ingredients: string[],
     description: string,
-    materials: string,
-    images: string[],
     thumbnail: string,
     favorite: boolean,
-    instructions: string
+    instructions: string[]
   ) {
     this.id = id;
     this.name = name;
     this.ingredients = ingredients;
     this.description = description;
-    this.materials = materials;
-    this.images = images;
     this.thumbnail = thumbnail;
     this.favorite = favorite;
     this.instructions = instructions;
@@ -40,20 +34,16 @@ export class Recipe {
   public getName(): string {
     return this.name;
   }
-  public getIngredients(): string {
+  public getIngredients(): string[] {
     return this.ingredients;
   }
-  public getInstructions(): string {
+  public getInstructions(): string[] {
     return this.instructions;
   }
   public getDescription(): string {
-    return this.description;
-  }
-  public getMaterials(): string {
-    return this.materials;
-  }
-  public getImages(): string[] {
-    return this.images;
+    const tmp = document.createElement('div');
+    tmp.innerHTML = this.description;
+    return tmp.textContent || tmp.innerText || '';
   }
   public getThumbnail(): string {
     return this.thumbnail;
@@ -69,25 +59,19 @@ export class Recipe {
   public setName(name: string) {
     this.name = name;
   }
-  public setIngredients(ingredients: string) {
+  public setIngredients(ingredients: string[]) {
     this.ingredients = ingredients;
   }
-  public setInstructions(instructions: string) {
+  public setInstructions(instructions: string[]) {
     this.instructions = instructions;
   }
   public setDescription(description: string) {
     this.description = description;
   }
-  public setMaterials(materials: string) {
-    this.materials = materials;
-  }
-  public setImages(images: string[]) {
-    this.images = images;
-  }
   public setThumbnail(thumbnail: string) {
     this.thumbnail = thumbnail;
   }
   public setFavorite(favorite: boolean) {
-    this.favorite = true;
+    this.favorite = favorite;
   }
 }

@@ -1,33 +1,79 @@
-<Header title="SABOR FIT"></Header>
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <div class="header-bar">
+      <ion-fab-button id="btnAtras" (click)="goToLogin()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-fab-button>
+      <ion-title class="ion-title">SABOR FIT</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
+  <div class="icon-wrapper">
+    <ion-icon name="person-circle-outline" class="register-icon" />
+  </div>
+
   <div class="div-flex-center">
-
-    <ion-icon  slot="start" class="input-icon"></ion-icon>
-
     <form [formGroup]="form" class="auth-form">
-      <Input-ion
-        icon="person"
-        [control]="form.controls.name"
-        type="name"
-        label="Nombre"
-      ></Input-ion> 
-      <Input-ion
-        icon="mailOutline"
-        autocomplete="email"
-        [control]="form.controls.email"
-        type="email"
-        label="Correo"
-      ></Input-ion>
+      <div class="input-block">
+        <Input-ion
+          icon="person"
+          [control]="form.controls.name"
+          type="name"
+          label="Nombre"
+        ></Input-ion>
+        <div
+          class="validators"
+          *ngIf="form.controls.name.errors && form.controls.name.touched"
+        >
+          <div *ngIf="form.controls.name.errors?.['required']">
+            El nombre es obligatorio.
+          </div>
+        </div>
+      </div>
 
-      <Input-ion
-        icon="lockClosedOutline"
-        [control]="form.controls.password"
-        type="password"
-        label="Contraseña"
-      ></Input-ion>
+      <div class="input-block">
+        <Input-ion
+          icon="mailOutline"
+          autocomplete="email"
+          [control]="form.controls.email"
+          type="email"
+          label="Correo"
+        ></Input-ion>
+        <div
+          class="validators"
+          *ngIf="form.controls.email.errors && form.controls.email.touched"
+        >
+          <div *ngIf="form.controls.email.errors?.['required']">
+            El correo es obligatorio.
+          </div>
+          <div *ngIf="form.controls.email.errors?.['email']">
+            Introduzca un correo valido.
+          </div>
+        </div>
+      </div>
 
-      <ion-button (click)="register()" expand="block" type="submit">Registrarse</ion-button>
+      <div class="input-block">
+        <Input-ion
+          icon="lockClosedOutline"
+          [control]="form.controls.password"
+          type="password"
+          label="Contraseña"
+        ></Input-ion>
+        <div
+          class="validators"
+          *ngIf="form.controls.password.errors && form.controls.password.touched"
+        >
+          <div *ngIf="form.controls.password.errors?.['required']">
+            La contraseña es obligatoria.
+          </div>
+        </div>
+      </div>
+
+      <ion-button (click)="register()" expand="block" type="submit"
+        >Registrarse</ion-button
+      >
     </form>
   </div>
 </ion-content>

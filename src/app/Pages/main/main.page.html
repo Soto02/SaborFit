@@ -1,28 +1,34 @@
-<!-- <Header title="SABOR FIT"> -->
 <ion-header>
   <ion-toolbar class="header-toolbar">
     <div class="header-bar">
-      <ion-fab-button id="btnUsuario">
+      <ion-fab-button id="user" class="btnUsuario">
         <ion-icon name="person"></ion-icon>
       </ion-fab-button>
-      <ion-popover trigger="btnUsuario" side="bottom" alignment="start">
+      <ion-popover trigger="user" side="bottom" alignment="start">
         <ng-template>
           <ion-content class="ion-padding">
-            <div>
-              <ion-label>Bienvenido, FULANO</ion-label>
+            <div class="divPopover">
+              <ion-label class="logOut"
+                >Bienvenido, {{user.getName()}}!!</ion-label
+              >
             </div>
-            <div>
-              <ion-icon name="log-out-outline"></ion-icon>
-              <a>Cerrar Sesion</a>
+            <div class="divPopover">
+              <a class="favorite" (click)="goFavorites()"
+                ><ion-icon name="star" class="favoriteIcon" />Favoritos</a
+              >
+            </div>
+            <div class="divPopover">
+              <a class="logOut" (click)="logOut()"
+                ><ion-icon name="log-out" class="logOutIcon" />Cerrar Sesion</a
+              >
             </div>
           </ion-content>
         </ng-template>
       </ion-popover>
-      <ion-title>SABOR FIT</ion-title>
+      <ion-title class="ion-title" (click)="scrollToTop()">SABOR FIT</ion-title>
     </div>
   </ion-toolbar>
 </ion-header>
-<!-- </Header> -->
 
 <ion-content [fullscreen]="false" #page>
   <swiper-container
@@ -30,8 +36,8 @@
     slides-per-view="2"
     space-between="10"
   >
-    <swiper-slide *ngFor="let recipe of recipes.slice(0,5); trackBy: trackById">
-      <ion-card class="slide-card">
+    <swiper-slide *ngFor="let recipe of swiperRecipes; trackBy: trackById">
+      <ion-card class="slide-card" (click)="goToRecipe(recipe)">
         <ion-card-header>
           <img
             [alt]="recipe.getName()"
@@ -61,23 +67,11 @@
   </div>
 
   <ng-container *ngFor="let recipe of recipes; trackBy: trackById">
-    <ion-card [routerLink]="['/recipe', recipe.getId()]">
-      <img
-        [alt]="recipe.getName()"
-        [src]="recipe.getThumbnail()"
-        class="recipe-img"
-      />
-      <ion-card-header>
-        <ion-card-title>{{recipe.getName()}}</ion-card-title>
-        <ion-card-subtitle
-          >{{recipe.getDescription() || 'Sin descripcion' }}</ion-card-subtitle
-        >
-      </ion-card-header>
-
-      <ion-card-content>
-        {{ recipe.getIngredients() || 'Ingredientes no disponibles' }}
-      </ion-card-content>
-    </ion-card>
+    <app-recipe-card
+      [recipe]="recipe"
+      (toggleFavorite)="recipeFavorite(recipe)"
+      (recipeClick)="goToRecipe(recipe)"
+    ></app-recipe-card>
   </ng-container>
 
   <ion-infinite-scroll
@@ -90,25 +84,4 @@
     >
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
-
-  <ion-fab-button id="btnFiltros" expand="block">
-    <ion-icon name="list"></ion-icon>
-  </ion-fab-button>
-  <ion-modal
-    trigger="btnFiltros"
-    [initialBreakpoint]="1"
-    [breakpoints]="[0, 1]"
-    [canDismiss]="canDismiss"
-    [presentingElement]="page"
-    #modal
-  >
-    <ng-template>
-      <div class="block">Filtros</div>
-      <ion-buttons slot="end">
-        <ion-fab-button (click)="modal.dismiss()">Guardar</ion-fab-button>
-      </ion-buttons>
-    </ng-template>
-  </ion-modal>
 </ion-content>
-
-<!-- <ion-button id="btnGenerar"> Generar menu semanal</ion-button> -->
