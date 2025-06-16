@@ -58,34 +58,20 @@ export class RecipePage implements OnInit {
 
   recipeFavorite(recipe: Recipe) {
     const user = this.userService.getCurrentUser();
-    if (!user || !user.getId()) {
-      console.error('No se encontró un usuario válido para añadir favorito');
-      return;
-    }
-
-    const userId = user.getId();
-    const recipeId = recipe.getId();
-
-    if (!recipeId) {
-      console.error('La receta no tiene un ID válido');
-      return;
-    }
+    if (!user) return;
 
     const isFav = recipe.getFavorite();
 
     if (isFav) {
       this.favoriteService
-        .deleteFavorite(userId, recipeId)
-        .subscribe(() => {
-          recipe.setFavorite(false);
-          console.log('Receta eliminada de favoritos');
-        });
+        .deleteFavorite(user.getId(), recipe.getId())
+        .subscribe(() => recipe.setFavorite(false));
     } else {
-      this.favoriteService
-        .addFavorite(userId, recipeId)
-        .subscribe(() => {
-          recipe.setFavorite(true);
-        });
+      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
+        this.favoriteService
+          .addFavorite(user.getId(), id)
+          .subscribe(() => recipe.setFavorite(true));
+      });
     }
   }
 

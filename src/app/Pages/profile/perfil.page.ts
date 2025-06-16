@@ -67,21 +67,18 @@ export class PerfilPage implements OnInit {
     const user = this.userService.getCurrentUser();
     if (!user) return;
 
-    console.log('Marcando favorito para:', user.getId(), recipe.getId());
     const isFav = recipe.getFavorite();
 
     if (isFav) {
       this.favoriteService
         .deleteFavorite(user.getId(), recipe.getId())
-        .subscribe(() => {
-          recipe.setFavorite(false);
-        });
+        .subscribe(() => recipe.setFavorite(false));
     } else {
-      this.favoriteService
-        .addFavorite(user.getId(), recipe.getId())
-        .subscribe(() => {
-          recipe.setFavorite(true);
-        });
+      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
+        this.favoriteService
+          .addFavorite(user.getId(), id)
+          .subscribe(() => recipe.setFavorite(true));
+      });
     }
   }
 

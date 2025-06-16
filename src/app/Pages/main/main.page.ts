@@ -38,6 +38,7 @@ register();
 })
 export class MainPage implements OnInit {
   recipes: Recipe[] = [];
+  recetasGuardadas = new Set<number>();
   swiperRecipes: Recipe[] = [];
   user!: User;
   todasCargadas = false;
@@ -84,6 +85,8 @@ export class MainPage implements OnInit {
         this.recipes = [...this.recipes, ...newRecipes];
         this.inicio += this.limit;
 
+        newRecipes.forEach((recipe) => this.guardarSiNoExiste(recipe));
+
         if (
           this.recipes.length >= this.maxRecipes ||
           newRecipes.length < this.limit
@@ -97,6 +100,21 @@ export class MainPage implements OnInit {
         console.error('Error al cargar recetas:', err);
         ev?.target.complete();
       },
+    });
+  }
+
+  guardarSiNoExiste(recipe: Recipe) {
+    if (this.recetasGuardadas.has(recipe.getId())) return;
+
+    this.recetasGuardadas.add(recipe.getId());
+
+    this.recipeService.saveRecipeBD(recipe).subscribe({
+      next: () => console.log(`Receta guardada: ${recipe.getName()}`),
+      error: (err) =>
+        console.warn(
+          `No se pudo guardar la receta ${recipe.getName()}:`,
+          err.error
+        ),
     });
   }
 
@@ -165,15 +183,13 @@ export class MainPage implements OnInit {
     if (isFav) {
       this.favoriteService
         .deleteFavorite(user.getId(), recipe.getId())
-        .subscribe(() => {
-          recipe.setFavorite(false);
-        });
+        .subscribe(() => recipe.setFavorite(false));
     } else {
-      this.favoriteService
-        .addFavorite(user.getId(), recipe.getId())
-        .subscribe(() => {
-          recipe.setFavorite(true);
-        });
+      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
+        this.favoriteService
+          .addFavorite(user.getId(), id)
+          .subscribe(() => recipe.setFavorite(true));
+      });
     }
   }
 

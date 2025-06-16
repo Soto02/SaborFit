@@ -23,15 +23,9 @@ export class RecipeService {
       map((response) => {
         const recetas = response.results.map(
           (recipe: any) =>
-            new Recipe(
-              recipe.id,
-              recipe.title,
-              [''],
+            new Recipe(recipe.id, recipe.title, [''], '', recipe.image, false, [
               '',
-              recipe.image,
-              false,
-              ['']
-            )
+            ])
         );
         recetas.forEach((nueva: any) => {
           if (!this.allRecipes.some((r) => r.getId() === nueva.getId())) {
@@ -59,7 +53,7 @@ export class RecipeService {
           recipe.summary || 'Sin descripción',
           recipe.image || '',
           false,
-          recipe.analyzedInstructions?.[0]?.steps.map((s: any) => s.step) || [],
+          recipe.analyzedInstructions?.[0]?.steps.map((s: any) => s.step) || []
         );
       })
     );
@@ -84,6 +78,22 @@ export class RecipeService {
           );
         });
       })
+    );
+  }
+
+  saveRecipeBD(recipe: Recipe): Observable<number> {
+    const body = {
+      id: recipe.getId(),
+      nombre: recipe.getName(),
+      descripcion: recipe.getDescription(),
+      instrucciones: recipe.getInstructions(),
+      ingredientes: recipe.getIngredients(),
+      image: recipe.getThumbnail(),
+    };
+
+    return this.http.post<number>(
+      'http://localhost:8080/api/recetas/save',
+      body
     );
   }
 
