@@ -17,7 +17,7 @@ export class RecipeService {
 
   /** Obtener las recetas, añadiendo un limite para que no llegue al infinito */
   getRecipesLimit(inicio: number, limite: number): Observable<Recipe[]> {
-    const url: string = `${this.apiUrl}/complexSearch?offset=${inicio}&number=${inicio}&apiKey=${this.apiKey}`;
+    const url: string = `${this.apiUrl}/complexSearch?offset=${inicio}&number=${limite}&apiKey=${this.apiKey}`;
     return this.http.get<any>(url).pipe(
       map((response) => {
         const recetas = response.results.map(
@@ -46,7 +46,7 @@ export class RecipeService {
 
   /** Obtener recetas que contengan cualquier tipo de carne */
   getMeatRecipes(limit: number): Observable<Recipe[]> {
-    const url: string = `${this.apiUrl}/complexSearch?number=10&includeIngredients=pork&apiKey=${this.apiKey}`;
+    const url: string = `${this.apiUrl}/complexSearch?number=30&includeIngredients=pork&apiKey=${this.apiKey}`;
 
     return this.http.get<any>(url).pipe(
       map((response) => {
