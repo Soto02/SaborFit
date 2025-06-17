@@ -40,53 +40,66 @@ export class PerfilPage implements OnInit {
     }
   }
 
+  /** Metodo para cargar la lista de recetas favoritos y ademas limpia el array de recetas favoritas */
   loadFavorites() {
     const user = this.userService.getCurrentUser();
     if (!user) return;
 
-    this.favoriteService.listFavorites(user.getId()).subscribe((favoritos) => {
-      console.log('Favoritos del backend:', favoritos);
-      // favoritos es un array de objetos Favorito que contienen la receta asociada
-      this.favoriteRecipes = favoritos.map((f) => {
-        const receta = new Recipe(
-          f.receta.id,
-          f.receta.title,
-          f.receta.ingredientes,
-          f.receta.summary,
-          f.receta.image,
-          false,
-          f.receta.instrucciones
-        );
-        receta.setFavorite(true);
-        return receta;
+    this.favoriteService
+      .listFavorites(user.getId())
+      .subscribe((idsExternos: string[]) => {
+        console.log('IDs externos favoritos:', idsExternos);
+
+        this.favoriteRecipes = [];
+
+        idsExternos.forEach((idExt) => {
+          const spoonacularId = Number(idExt.replace('spoonacular-', ''));
+          this.recipeService
+            .getRecipeById(spoonacularId)
+            .subscribe((receta) => {
+              receta.setFavorite(true);
+              this.favoriteRecipes.push(receta);
+            });
+        });
       });
-    });
   }
 
+  /** Metodo para marcar o desmarar una receta de favoritos */
   recipeFavorite(recipe: Recipe) {
     const user = this.userService.getCurrentUser();
     if (!user) return;
 
     const isFav = recipe.getFavorite();
+    const idExterno = recipe.getIdExterno();
 
     if (isFav) {
       this.favoriteService
-        .deleteFavorite(user.getId(), recipe.getId())
-        .subscribe(() => recipe.setFavorite(false));
+        .deleteFavorite(user.getId(), recipe)
+        .subscribe(() => {
+          recipe.setFavorite(false);
+
+          this.favoriteRecipes = this.favoriteRecipes.filter(
+            (r) => r.getId() !== recipe.getId()
+          );
+        });
     } else {
-      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
+      this.recipeService.saveRecipeBD(recipe).subscribe(() => {
         this.favoriteService
-          .addFavorite(user.getId(), id)
-          .subscribe(() => recipe.setFavorite(true));
+          .addFavorite(user.getId(), idExterno)
+          .subscribe(() => {
+            recipe.setFavorite(true);
+          });
       });
     }
   }
 
   goToRecipe(recipe: Recipe) {
-    this.router.navigate(['/recipe', recipe.getId()]);
+    this.router.navigate(['/recipe', recipe.getIdExterno()], {
+      queryParams: { externo: true },
+    });
   }
 
-  goToMain() {
+  back() {
     this.router.navigate(['/main']);
   }
 }

@@ -1,34 +1,48 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Recipe } from '../Models/Recipe/recipe';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FavoriteService {
 
-  private apiUrl = 'http://localhost:8080/api/favoritos';
-
   constructor(private http: HttpClient) {}
 
-  addFavorite(usuarioId: number, recetaId: number): Observable<string> {
+  addFavorite(usuarioId: number, idExterno: string): Observable<string> {
     const params = new HttpParams()
       .set('usuarioId', usuarioId)
-      .set('recetaId', recetaId);
+      .set('idExterno', idExterno);
 
-    return this.http.post(this.apiUrl + '/agregar', null, { params, responseType: 'text' });
+    return this.http.post('http://localhost:8080/api/favoritos/agregar', null, {
+      params,
+      responseType: 'text',
+    });
   }
 
-  listFavorites(usuarioId: number): Observable<any[]> {
+  deleteFavorite(usuarioId: number, recipe: Recipe): Observable<string> {
+    const idExterno = recipe.getIdExterno?.();
+    const finalIdExterno =
+      idExterno && idExterno.startsWith('spoonacular-')
+        ? idExterno
+        : `spoonacular-${recipe.getId()}`;
+
+    const params = new HttpParams()
+      .set('usuarioId', usuarioId)
+      .set('idExterno', finalIdExterno);
+
+    return this.http.delete('http://localhost:8080/api/favoritos/eliminar', {
+      params,
+      responseType: 'text',
+    });
+  }
+
+  listFavorites(usuarioId: number): Observable<string[]> {
     const params = new HttpParams().set('usuarioId', usuarioId);
-    return this.http.get<any[]>(this.apiUrl + '/listar', { params });
-  }
-
-  deleteFavorite(usuarioId: number, recetaId: number): Observable<string> {
-    const params = new HttpParams()
-      .set('usuarioId', usuarioId)
-      .set('recetaId', recetaId);
-
-    return this.http.delete(this.apiUrl + '/eliminar', { params, responseType: 'text' });
+    return this.http.get<string[]>(
+      'http://localhost:8080/api/favoritos/listar',
+      { params }
+    );
   }
 }

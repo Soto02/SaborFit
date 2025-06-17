@@ -37,14 +37,23 @@ register();
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class MainPage implements OnInit {
+  //Recetas principales y del swiper
   recipes: Recipe[] = [];
-  recetasGuardadas = new Set<number>();
   swiperRecipes: Recipe[] = [];
-  user!: User;
+
+  //Recetas marcadas como favoritas por el usuario
+  favoritosIds = new Set<string>();
+
+  //Control de paginación y carga
   todasCargadas = false;
   inicio = 0;
   limit = 5;
   maxRecipes = 20;
+
+  //Usuario actual
+  user!: User;
+
+  //Texto del input de búsqueda
   searchQuery: string = '';
 
   constructor(
@@ -54,26 +63,31 @@ export class MainPage implements OnInit {
     private router: Router,
     private popoverController: PopoverController
   ) {
+    // Cargar iconos necesarios
     addIcons({ person, list, searchOutline, logOut, star, starOutline });
   }
 
+  /** Inicializa el componente */
   ngOnInit() {
-    this.loadRecipes();
-    this.loadRandomSwiperRecipes();
     const currentUser = this.userService.getCurrentUser();
     if (currentUser) {
       this.user = currentUser;
     }
+
+    this.loadFavoritos(() => {
+      this.loadRecipes();
+      this.loadRandomSwiperRecipes();
+    });
   }
 
   @ViewChild('page', { static: false }) content!: IonContent;
 
-  /** Sirve para que me lleve a lo mas alto de la pagina con una animacion de 0.5 segundos */
+  /** Hace scroll al principio de la página con animación */
   scrollToTop() {
     this.content.scrollToTop(500); // 500ms de animación
   }
 
-  /** Cargar recetas */
+  /** Carga las recetas en bloques paginados */
   private loadRecipes(ev?: InfiniteScrollCustomEvent) {
     if (this.todasCargadas) {
       ev?.target.complete();
@@ -82,10 +96,12 @@ export class MainPage implements OnInit {
 
     this.recipeService.getRecipesLimit(this.inicio, this.limit).subscribe({
       next: (newRecipes: Recipe[]) => {
+        newRecipes.forEach((receta) => {
+          receta.setFavorite(this.favoritosIds.has(receta.getIdExterno()));
+        });
+
         this.recipes = [...this.recipes, ...newRecipes];
         this.inicio += this.limit;
-
-        newRecipes.forEach((recipe) => this.guardarSiNoExiste(recipe));
 
         if (
           this.recipes.length >= this.maxRecipes ||
@@ -103,50 +119,48 @@ export class MainPage implements OnInit {
     });
   }
 
-  guardarSiNoExiste(recipe: Recipe) {
-    if (this.recetasGuardadas.has(recipe.getId())) return;
+  /** Carga las recetas favoritas del usuario actual */
+  private loadFavoritos(callback: () => void) {
+    const user = this.userService.getCurrentUser();
+    if (!user) {
+      callback();
+      return;
+    }
 
-    this.recetasGuardadas.add(recipe.getId());
-
-    this.recipeService.saveRecipeBD(recipe).subscribe({
-      next: () => console.log(`Receta guardada: ${recipe.getName()}`),
-      error: (err) =>
-        console.warn(
-          `No se pudo guardar la receta ${recipe.getName()}:`,
-          err.error
-        ),
+    this.favoriteService.listFavorites(user.getId()).subscribe((favoritos) => {
+      favoritos.forEach((idExterno) => this.favoritosIds.add(idExterno));
+      callback();
     });
   }
 
-  /** Lo utilizo porque estoy usando listas grandes y porque estoy actualizando la lista con frecuencia*/
+  /** Devuelve el ID de receta para mejorar rendimiento con *ngFor */
   trackById(index: number, recipe: Recipe): number {
     return recipe.getId();
   }
 
+  /** Carga recetas aleatorias para el swiper superior */
   private loadRandomSwiperRecipes(): void {
-    this.recipeService.getRecipesLimit(0, 5).subscribe({
+    this.recipeService.getMeatRecipes(5).subscribe({
       next: (recipes: Recipe[]) => {
-        const random = this.getRandomSubset(recipes, 5);
-        this.swiperRecipes = random;
+        recipes.forEach((r) =>
+          r.setFavorite(this.favoritosIds.has(r.getIdExterno()))
+        );
+        this.swiperRecipes = recipes;
       },
       error: (err) => {
-        console.error('Error al cargar recetas para swiper:', err);
+        console.error('Error al cargar recetas de carne para swiper:', err);
       },
     });
   }
 
-  /** Utilidad para seleccionar recetas aleatorias */
-  private getRandomSubset(array: Recipe[], count: number): Recipe[] {
-    const shuffled = [...array].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  }
-
+  /** Manejador para cargar más recetas con scroll infinito */
   onloadRecipes(ev: InfiniteScrollCustomEvent) {
     setTimeout(() => {
       this.loadRecipes(ev);
     }, 500);
   }
 
+  /** Realiza la búsqueda de recetas por ingredientes */
   onSearch() {
     if (!this.searchQuery.trim()) return;
 
@@ -163,51 +177,47 @@ export class MainPage implements OnInit {
       },
     });
   }
+
+  /** Permite o no cerrar el modal por gesto */
   async canDismiss(data?: undefined, role?: string) {
     return role !== 'gesture';
   }
 
-  /** Metodo que te dirigue a la pagina de la receta */
+  /** Navega a la page de detalle de la receta */
   goToRecipe(recipe: Recipe) {
-    this.router.navigate(['/recipe', recipe.getId()], {
-      queryParams: { from: 'main' },
-    });
+    this.router.navigate(['/recipe', recipe.getId()]);
   }
-  /** Añade o elimina una receta de favoritos */
+
+  /** Metodo para marcar o desmarar una receta de favoritos */
   recipeFavorite(recipe: Recipe) {
     const user = this.userService.getCurrentUser();
     if (!user) return;
 
     const isFav = recipe.getFavorite();
+    const idExterno = recipe.getIdExterno();
 
     if (isFav) {
       this.favoriteService
-        .deleteFavorite(user.getId(), recipe.getId())
+        .deleteFavorite(user.getId(), recipe)
         .subscribe(() => recipe.setFavorite(false));
     } else {
-      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
+      this.recipeService.saveRecipeBD(recipe).subscribe(() => {
         this.favoriteService
-          .addFavorite(user.getId(), id)
+          .addFavorite(user.getId(), idExterno)
           .subscribe(() => recipe.setFavorite(true));
       });
     }
   }
 
+  /** Cierra el popover y cierra sesión */
   async logOut() {
     await this.popoverController.dismiss();
     this.router.navigate(['/login']);
   }
+
+  /** Cierra el popover y navega al perfil */
   async goFavorites() {
     await this.popoverController.dismiss();
     this.router.navigate(['/perfil']);
   }
 }
-
-// this.recipeService.getAll().subscribe({
-//   next: (recipe: Recipe[]) => {
-//     this.recipes = recipe;
-//   },
-//   error: (err) => {
-//     console.error('Error al cargar recetas:', err);
-//   },
-// });

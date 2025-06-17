@@ -3,6 +3,8 @@ ion-content {
   color: var(--grey-text);
   --background: var(--beige);
 }
+
+//HEAD
 .ion-title {
   text-align: center;
   font-family: sans-serif;
@@ -102,7 +104,7 @@ ion-modal {
 }
 .slide-title {
   font-family: sans-serif;
-  font-size: 0.85rem;
+  font-size: 16px;
   text-align: center;
   padding: 4px;
 }

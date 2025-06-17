@@ -10,7 +10,7 @@
 </ion-header>
 
 <!-- SI HAY RESULTADOS -->
-<!-- <ion-content *ngIf="!sinResultados">
+<ion-content *ngIf="!sinResultados">
   <h2 class="titulo-seccion">
     Resultados:
   </h2>
@@ -25,22 +25,14 @@
       </app-recipe-card>
     </div>
   </ng-container>
-</ion-content> -->
+</ion-content>
 
 <!-- EN CASO DE QUE NO HAYA RESULTADOS -->
-<ion-content *ngIf="!sinResultados" class="ion-padding sinRecetas-content">
+<ion-content *ngIf="sinResultados" class="ion-padding sinRecetas-content">
   <img src="assets/noReceta.png" alt="SinRecetas" class="logo-img" />
 
   <h2 class="mensaje-error">No se encontraron recetas con esos ingredientes</h2>
   <div class="line"></div>
-  <!-- <ion-item lines="none" class="checkbox-item">
-    <ion-checkbox slot="start" [(ngModel)]="sinGluten"></ion-checkbox>
-    <ion-label>Sin gluten</ion-label>
-  </ion-item>
-  <ion-item lines="none" class="checkbox-item">
-    <ion-checkbox slot="start" [(ngModel)]="sinLactosa"></ion-checkbox>
-    <ion-label>Sin lactosa</ion-label>
-  </ion-item> -->
   <ion-button expand="block" class="boton-generar" (click)="createRecipe()">Generar receta</ion-button>
 
     <ion-spinner

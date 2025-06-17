@@ -1,6 +1,7 @@
 export class Recipe {
   //VARIABLES
   private id: number = 0;
+  private idExterno: string = '';
   private name: string = '';
   private ingredients: string[] = [''];
   private instructions: string[] = [''];
@@ -11,6 +12,7 @@ export class Recipe {
   //CONSTRUCTOR
   constructor(
     id: number,
+    idExterno: string,
     name: string,
     ingredients: string[],
     description: string,
@@ -19,6 +21,7 @@ export class Recipe {
     instructions: string[]
   ) {
     this.id = id;
+    this.idExterno = idExterno;
     this.name = name;
     this.ingredients = ingredients;
     this.description = description;
@@ -31,6 +34,10 @@ export class Recipe {
   public getId(): number {
     return this.id;
   }
+  public getIdExterno(): string {
+    return this.idExterno;
+  }
+
   public getName(): string {
     return this.name;
   }
@@ -46,7 +53,7 @@ export class Recipe {
     return tmp.textContent || tmp.innerText || '';
   }
   public getThumbnail(): string {
-    return this.thumbnail;
+    return encodeURI(this.thumbnail);
   }
   public getFavorite(): boolean {
     return this.favorite;
@@ -55,6 +62,9 @@ export class Recipe {
   //METODOS SET
   public setId(id: number) {
     this.id = id;
+  }
+  public setIdExterno(idExterno: string) {
+    this.idExterno = idExterno;
   }
   public setName(name: string) {
     this.name = name;

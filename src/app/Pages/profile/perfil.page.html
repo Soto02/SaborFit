@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="header-toolbar">
     <div class="header-bar">
-      <ion-fab-button id="btnAtras" (click)="goToMain()">
+      <ion-fab-button id="btnAtras" (click)="back()">
         <ion-icon name="arrow-back"></ion-icon>
       </ion-fab-button>
       <ion-title class="ion-title">SABOR FIT</ion-title>
@@ -35,6 +35,7 @@
       <div *ngFor="let recipe of favoriteRecipes">
         <app-recipe-card
           [recipe]="recipe"
+          [mostrarEstrella]="false"
           (toggleFavorite)="recipeFavorite($event)"
           (recipeClick)="goToRecipe($event)">
         </app-recipe-card>

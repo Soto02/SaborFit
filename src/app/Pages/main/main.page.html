@@ -69,6 +69,7 @@
   <ng-container *ngFor="let recipe of recipes; trackBy: trackById">
     <app-recipe-card
       [recipe]="recipe"
+      [mostrarEstrella]="false"
       (toggleFavorite)="recipeFavorite(recipe)"
       (recipeClick)="goToRecipe(recipe)"
     ></app-recipe-card>

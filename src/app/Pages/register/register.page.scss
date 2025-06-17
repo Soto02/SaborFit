@@ -3,6 +3,9 @@ ion-content {
   color: var(--grey-text);
   --background: linear-gradient(to bottom, #ee8027, #eccfa8);
 }
+.login-background {
+  background: linear-gradient(to bottom, #ee8027, #eccfa8) !important;
+}
 //------------------HEADER-------------------------
 .ion-title {
   text-align: center;

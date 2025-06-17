@@ -10,18 +10,13 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" *ngIf="!loading && recipe">
-  <div class="imagen-container">
+  <div class="imagen-container" *ngIf="!imagenError">
     <ion-img
-      [src]="recipe.getThumbnail()"
+      [src]="recipe?.getThumbnail()"
       alt="Imagen receta"
       class="recipe-img"
+      (ionError)="onImagenError()"
     ></ion-img>
-    <ion-icon
-      class="starCard"
-      [name]="recipe.getFavorite() ? 'star' : 'star-outline'"
-      (click)="recipeFavorite(recipe)"
-    >
-    </ion-icon>
   </div>
   <ion-card class="detalle-receta">
     <ion-card-header>
@@ -36,7 +31,7 @@
 
       <h3 class="subtitulo">🧂 Ingredientes</h3>
       <ul class="ingredientes">
-        <li>{{ recipe.getIngredients() }}</li>
+        <li *ngFor="let ing of recipe.getIngredients()">{{ ing }}</li>
       </ul>
 
       <div class="line"></div>

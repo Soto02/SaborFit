@@ -6,6 +6,7 @@
       class="recipe-img"
     ></ion-img>
     <ion-icon
+      *ngIf="mostrarEstrella"
       class="starCard"
       [name]="recipe.getFavorite() ? 'star' : 'star-outline'"
       (click)="onToggleFavorite($event)"

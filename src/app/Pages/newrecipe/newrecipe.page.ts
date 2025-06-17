@@ -4,12 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Recipe } from 'src/app/Models/Recipe/recipe';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RecipeService } from 'src/app/Services/recipe-service.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { addIcons } from 'ionicons';
-import { arrowBack, star, starOutline } from 'ionicons/icons';
+import { arrowBack, star, starOutline, bookOutline } from 'ionicons/icons';
 import { UserService } from 'src/app/Services/user-service.service';
-import { FavoriteService } from 'src/app/Services/favorite-service.service';
 import { User } from 'src/app/Models/User/user';
 @Component({
   selector: 'app-newrecipe',
@@ -23,58 +21,45 @@ export class NewrecipePage implements OnInit {
   user?: User;
   loading = true;
   from: string = 'main';
+  imagenError = false;
 
   constructor(
-    private route: ActivatedRoute,
     private router: Router,
-    private recipeService: RecipeService,
     private userService: UserService,
-    private favoriteService: FavoriteService
   ) {
-    addIcons({ arrowBack, star, starOutline });
+    addIcons({ arrowBack, star, starOutline, bookOutline });
   }
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.from = this.route.snapshot.queryParamMap.get('from') || 'main';
-
-    this.recipeService.getRecipeById(id).subscribe({
-      next: (r) => {
-        this.recipe = r;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al obtener receta:', err);
-        this.loading = false;
-      },
-    });
+    const recetaStr = localStorage.getItem('nuevaReceta');
+    if (recetaStr) {
+      const data = JSON.parse(recetaStr);
+      const randomId = Math.floor(Math.random() * 1000000);
+      this.recipe = new Recipe(
+        randomId,
+        `ia-${Date.now()}`,
+        data.name,
+        data.ingredients,
+        data.description,
+        data.thumbnail,
+        false,
+        data.instructions
+      );
+    }
 
     const currentUser = this.userService.getCurrentUser();
     if (currentUser) {
       this.user = currentUser;
     }
+
+    this.loading = false;
   }
 
-  recipeFavorite(recipe: Recipe) {
-    const user = this.userService.getCurrentUser();
-    if (!user) return;
-
-    const isFav = recipe.getFavorite();
-
-    if (isFav) {
-      this.favoriteService
-        .deleteFavorite(user.getId(), recipe.getId())
-        .subscribe(() => recipe.setFavorite(false));
-    } else {
-      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
-        this.favoriteService
-          .addFavorite(user.getId(), id)
-          .subscribe(() => recipe.setFavorite(true));
-      });
-    }
+  onImagenError() {
+    this.imagenError = true;
   }
 
   back() {
-    this.router.navigate(['/' + this.from]);
+    this.router.navigate(['/main']);
   }
 }

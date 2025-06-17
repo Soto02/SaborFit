@@ -24,10 +24,7 @@ export class ResultadosPage implements OnInit {
   ingredientes: string[] = [];
   recetasFiltradas: any[] = [];
   sinResultados = false;
-  sinGluten = false;
-  sinLactosa = false;
   loadingRecipe = false;
-  timerRef: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,49 +37,64 @@ export class ResultadosPage implements OnInit {
   }
 
   ngOnInit() {
-    const query = this.route.snapshot.queryParamMap.get('ingredientes');
-    if (query) {
-      const ingredientes = query.split(',').map((i) => i.trim().toLowerCase());
-      this.recipeService
-        .searchRecipesByIngredients(ingredientes)
-        .subscribe((recetas) => {
-          this.recetasFiltradas = recetas;
-          this.sinResultados = recetas.length === 0;
-        });
-    }
-
     const currentUser = this.userService.getCurrentUser();
     if (currentUser) {
       this.user = currentUser;
     }
   }
 
+  /** Se ejecuta cada vez que se entra en la page */
+  ionViewWillEnter() {
+    this.recetasFiltradas = [];
+    this.sinResultados = false;
+
+    const query = this.route.snapshot.queryParamMap.get('ingredientes');
+    if (query) {
+      this.ingredientes = query.split(',').map((i) => i.trim().toLowerCase());
+      this.recipeService
+        .searchRecipesByIngredients(this.ingredientes)
+        .subscribe((recetas) => {
+          this.recetasFiltradas = recetas;
+          this.sinResultados = recetas.length === 0;
+        });
+    }
+  }
+
+  /** Metodo para generar una nueva receta con la ia y navega a la page de detalle */
   createRecipe() {
     this.loadingRecipe = true;
 
-    this.timerRef = setTimeout(() => {
-      this.loadingRecipe = false;
+    const ingredientes = this.ingredientes.join(', ');
 
-      // Simula navegación a una receta creada. Cambia por lógica real si quieres.
-      this.router.navigate(['/newrecipe', 9999], {
-        queryParams: { from: 'resultados' },
-      });
-    }, 10000);
+    this.recipeService.generarRecetaConAI(ingredientes).subscribe((res) => {
+      if (!res.error) {
+        const receta = res.receta;
+
+        localStorage.setItem('nuevaReceta', JSON.stringify(receta));
+
+        this.router.navigate(['/newrecipe'], {
+          queryParams: { from: 'resultados' },
+        });
+      }
+    });
   }
+
+  /** Metodo para marcar o desmarar una receta de favoritos */
   recipeFavorite(recipe: Recipe) {
     const user = this.userService.getCurrentUser();
     if (!user) return;
 
     const isFav = recipe.getFavorite();
+    const idExterno = recipe.getIdExterno();
 
     if (isFav) {
       this.favoriteService
-        .deleteFavorite(user.getId(), recipe.getId())
+        .deleteFavorite(user.getId(), recipe)
         .subscribe(() => recipe.setFavorite(false));
     } else {
-      this.recipeService.saveRecipeBD(recipe).subscribe((id) => {
+      this.recipeService.saveRecipeBD(recipe).subscribe(() => {
         this.favoriteService
-          .addFavorite(user.getId(), id)
+          .addFavorite(user.getId(), idExterno)
           .subscribe(() => recipe.setFavorite(true));
       });
     }
@@ -98,15 +110,3 @@ export class ResultadosPage implements OnInit {
     this.router.navigate(['/main']);
   }
 }
-
-// filtrarRecetas() {
-//   const todasLasRecetas = this.recipeService.getAllRecipes(); // simulado desde localStorage u otro array
-//   this.recetasFiltradas = todasLasRecetas.filter((receta) =>
-//     this.ingredientes.every((ing) =>
-//       receta
-//         .getIngredients()
-//         .some((ri: string) => ri.toLowerCase().includes(ing))
-//     )
-//   );
-//   this.sinResultados = this.recetasFiltradas.length === 0;
-// }
